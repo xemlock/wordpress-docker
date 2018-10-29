@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  www:
+    depends_on:
+      - db
+    build: ./docker
+    environment:
+      WORDPRESS_VERSION: latest
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WP_DEBUG: 1
+      WPLANG: pl
+      SMTP_HOST:
+      SMTP_PORT:
+      SMTP_USER:
+      SMTP_PASS:
+      SMTP_AUTH:
+      SMTP_SSL:
+    ports:
+      - "8000:80"
+    volumes:
+      - ./www:/var/www
+      - ./docker/wp-config.php:/var/www/wp-config.php
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
