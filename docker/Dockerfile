@@ -23,6 +23,13 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
   && php /tmp/composer-setup.php --install-dir="/usr/local/bin" --filename="composer" --no-ansi --force \
   && rm -f /tmp/composer-setup.php /tmp/composer-setup.sig
 
+# Install WP-CLI
+RUN curl -o /usr/local/bin/wp.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && echo '#!/bin/sh' > /usr/local/bin/wp \
+  && echo 'php /usr/local/bin/wp.phar --allow-root $*' >> /usr/local/bin/wp \
+  && chmod +x /usr/local/bin/wp \
+  && wp --info
+
 # Apache
 COPY ./default.conf /etc/apache2/sites-available/000-default.conf
 VOLUME ["/var/www"]
