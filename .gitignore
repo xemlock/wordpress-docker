@@ -1,5 +1,7 @@
 db_data/*
 www/*
+plugins/*
+themes/*
 
 *.swp
 *.swo

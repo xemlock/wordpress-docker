@@ -24,6 +24,8 @@ services:
     volumes:
       - ./www:/var/www
       - ./docker/wp-config.php:/var/www/wp-config.php
+      - ./plugins:/var/www/wp-content/plugins
+      - ./themes:/var/www/wp-content/themes
 
   db:
     image: mysql:5.7
