@@ -12,7 +12,8 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WP_DEBUG: 1
-      WPLANG: pl
+      WP_DEBUG_LOG: 1
+      WPLANG: en
       SMTP_HOST:
       SMTP_PORT:
       SMTP_USER:

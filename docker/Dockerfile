@@ -4,6 +4,9 @@ FROM ubuntu:18.04
 # https://github.com/phusion/baseimage-docker/issues/58
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
+# Remove default dash and replace it with bash
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 # Install PHP
 RUN apt-get update \
   && apt-get install -y \
@@ -29,6 +32,13 @@ RUN curl -o /usr/local/bin/wp.phar https://raw.githubusercontent.com/wp-cli/buil
   && echo 'php /usr/local/bin/wp.phar --allow-root $*' >> /usr/local/bin/wp \
   && chmod +x /usr/local/bin/wp \
   && wp --info
+
+# Install NVM, Node and Bower
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash
+RUN source ~/.nvm/nvm.sh \
+  && nvm install stable \
+  && npm i -g bower
+RUN echo '{ "allow_root": true }' > ~/.bowerrc
 
 # Apache
 COPY ./default.conf /etc/apache2/sites-available/000-default.conf

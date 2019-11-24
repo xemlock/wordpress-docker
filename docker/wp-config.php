@@ -13,12 +13,21 @@ define('DB_COLLATE', '');
 $table_prefix  = 'wp_';
 
 define('WP_DEBUG', (bool) getenv('WP_DEBUG'));
+define('WP_DEBUG_LOG', (bool) getenv('WP_DEBUG_LOG'));
 define('WPLANG', (string) getenv('WPLANG'));
 
-if (!defined('ABSPATH'))
-    define('ABSPATH', dirname(__FILE__) . '/');
 
-// https://exploitbox.io/vuln/WordPress-Exploit-4-6-RCE-CODE-EXEC-CVE-2016-10033.html
-$_SERVER['HTTP_HOST'] = preg_replace('/[^-_.:\/a-z0-9]/', '', $_SERVER['HTTP_HOST']);
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__FILE__) . '/');
+}
+
+define('AUTH_KEY', '');
+define('AUTH_SALT', '');
+define('SECURE_AUTH_KEY', '');
+define('SECURE_AUTH_SALT', '');
+define('LOGGED_IN_KEY', '');
+define('LOGGED_IN_SALT', '');
+define('NONCE_KEY', '');
+define('NONCE_SALT', '');
 
 require_once(ABSPATH . 'wp-settings.php');

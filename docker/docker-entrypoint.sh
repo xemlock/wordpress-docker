@@ -8,8 +8,10 @@ log () {
 
 CONFIG=~/.my.cnf
 
-echo "[client]" > "$CONFIG"
+echo "[mysql]" > "$CONFIG"
 echo "database=${WORDPRESS_DB_NAME}" >> "$CONFIG"
+echo "" >> "$CONFIG"
+echo "[client]" >> "$CONFIG"
 
 case "${WORDPRESS_DB_HOST}" in
   *:*)
