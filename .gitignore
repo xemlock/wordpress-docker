@@ -5,4 +5,10 @@ themes/*
 
 *.swp
 *.swo
+
+*.iml
+.idea
+
 .DS_Store
+[Dd]esktop.ini
+Thumbs.db
