@@ -29,7 +29,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 # Install WP-CLI
 RUN curl -o /usr/local/bin/wp.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && echo '#!/bin/sh' > /usr/local/bin/wp \
-  && echo 'php /usr/local/bin/wp.phar --allow-root $*' >> /usr/local/bin/wp \
+  && echo 'php /usr/local/bin/wp.phar --allow-root "$@"' >> /usr/local/bin/wp \
   && chmod +x /usr/local/bin/wp \
   && wp --info
 
