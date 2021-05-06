@@ -5,7 +5,6 @@ log () {
 }
 
 # Configure MySQL client
-
 CONFIG=~/.my.cnf
 
 echo "[mysql]" > "$CONFIG"
@@ -29,7 +28,6 @@ echo "user=${WORDPRESS_DB_USER}" >> "$CONFIG"
 echo "password=${WORDPRESS_DB_PASSWORD}" >> "$CONFIG"
 
 # Download WordPress
-
 if [ -z "$WORDPRESS_VERSION" ]; then
   WORDPRESS_VERSION=latest
 fi
@@ -41,11 +39,10 @@ if [ ! -f "/var/www/index.php" ]; then
   cp /noop.php /var/www/wp-admin/includes/noop.php
 fi
 
-# WP options adjustments
-
+# Install WordPress
 log 'Waiting for mysql to become ready'
 while true; do
-  DB_TABLES=$(mysql -e 'SHOW TABLES')
+  DB_TABLES=$(mysql -e 'SHOW TABLES' 2>/dev/null)
   if [ $? -eq 0 ]; then
     break
   else
@@ -53,11 +50,28 @@ while true; do
   fi
 done
 
-log 'Setting up WP options'
-echo "UPDATE wp_options SET option_value = 'http://localhost:8000' WHERE option_name IN ('home', 'siteurl');" > home.sql
-mysql < home.sql
-rm -f home.sql
+WD=$(pwd)
+cd /var/www/
 
+PORT=8000
+
+DB_VERSION=$(echo "SELECT option_value FROM wp_options WHERE option_name = 'db_version'" | mysql --skip-column-names 2>/dev/null)
+if [ -z "$DB_VERSION" ]; then
+  log 'Installing WordPress'
+
+  wp core install --url=localhost:$PORT --title='My Blog' --admin_name=admin --admin_password=admin --admin_email=admin@localhost.com
+  echo "UPDATE wp_options SET option_value = 'admin@localhost' WHERE option_name = 'admin_email'" | mysql
+  wp option set blog_public 0
+  wp rewrite structure '/%postname%/'
+fi
+
+# Set up WordPress
+log 'Updating WordPress options'
+
+# Ensure WP uses proper site url, in case database was imported
+echo "UPDATE wp_options SET option_value = 'http://localhost:${PORT}' WHERE option_name IN ('home', 'siteurl');" | mysql
+
+# Use current SMTP configuration from docker-compose.yml
 echo "DELETE FROM wp_options WHERE option_name LIKE 'smtp_%';" > smtp.sql
 echo "INSERT INTO wp_options (option_name, option_value) VALUES ('smtp_auth', '${SMTP_AUTH}');" >> smtp.sql
 echo "INSERT INTO wp_options (option_name, option_value) VALUES ('smtp_host', '${SMTP_HOST}');" >> smtp.sql
@@ -68,4 +82,8 @@ echo "INSERT INTO wp_options (option_name, option_value) VALUES ('smtp_user', '$
 mysql < smtp.sql
 rm -f smtp.sql
 
+cd "$WD"
+
+# Apache
+log 'Starting Apache server'
 exec apache2ctl -DFOREGROUND
