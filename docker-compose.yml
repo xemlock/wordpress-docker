@@ -25,6 +25,7 @@ services:
     volumes:
       - ./www:/var/www
       - ./docker/wp-config.php:/var/www/wp-config.php
+      - ./docker/_htaccess:/var/www/.htaccess
       - ./plugins:/var/www/wp-content/plugins
       - ./themes:/var/www/wp-content/themes
 
