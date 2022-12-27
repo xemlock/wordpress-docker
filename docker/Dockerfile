@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Prevent 'debconf: unable to initialize frontend: Dialog' warnings
 # https://github.com/phusion/baseimage-docker/issues/58
@@ -16,8 +16,8 @@ RUN apt-get update \
     mysql-client \
   && rm -rf /var/lib/apt/lists/*
 
-RUN sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 128M/g" /etc/php/7.2/apache2/php.ini
-RUN sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 256M/g" /etc/php/7.2/apache2/php.ini
+RUN sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 128M/g" /etc/php/7.4/apache2/php.ini
+RUN sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 256M/g" /etc/php/7.4/apache2/php.ini
 
 # Install Composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
@@ -33,12 +33,10 @@ RUN curl -o /usr/local/bin/wp.phar https://raw.githubusercontent.com/wp-cli/buil
   && chmod +x /usr/local/bin/wp \
   && wp --info
 
-# Install NVM, Node and Bower
+# Install NVM and Node
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash
 RUN source ~/.nvm/nvm.sh \
-  && nvm install stable \
-  && npm i -g bower
-RUN echo '{ "allow_root": true }' > ~/.bowerrc
+  && nvm install 18
 
 # Apache
 COPY ./default.conf /etc/apache2/sites-available/000-default.conf
