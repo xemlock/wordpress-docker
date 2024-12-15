@@ -51,7 +51,11 @@ RUN a2enmod rewrite
 
 EXPOSE 80
 
+# Make sure this file is using LF, and not CRLF (as may be the case on Windows)
+# https://stackoverflow.com/questions/44460825/entrypoint-file-not-found
 COPY ./docker-entrypoint.sh /usr/local/bin/
 COPY ./noop.php /
 
+# From Dockerfile reference: The exec form is parsed as a JSON array, which means that
+# you must use double-quotes (“) around words not single-quotes (‘).
 ENTRYPOINT ["docker-entrypoint.sh"]
