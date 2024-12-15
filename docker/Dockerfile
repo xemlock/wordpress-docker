@@ -34,9 +34,11 @@ RUN curl -o /usr/local/bin/wp.phar https://raw.githubusercontent.com/wp-cli/buil
   && wp --info
 
 # Install NVM and Node
+# Maximum Node version is determined by Ubuntu version, otherwise it will fail with:
+# node: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.28' not found (required by node)
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash
 RUN source ~/.nvm/nvm.sh \
-  && nvm install 18
+  && nvm install 16
 
 # Apache
 COPY ./default.conf /etc/apache2/sites-available/000-default.conf
