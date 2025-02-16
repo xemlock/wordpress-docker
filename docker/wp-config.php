@@ -30,4 +30,7 @@ define('LOGGED_IN_SALT', '');
 define('NONCE_KEY', '');
 define('NONCE_SALT', '');
 
+# Install plugins without entering FTP credentials
+define('FS_METHOD', 'direct');
+
 require_once(ABSPATH . 'wp-settings.php');
