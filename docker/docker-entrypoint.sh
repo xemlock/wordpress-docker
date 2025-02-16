@@ -82,6 +82,12 @@ echo "INSERT INTO wp_options (option_name, option_value) VALUES ('smtp_user', '$
 mysql < smtp.sql
 rm -f smtp.sql
 
+# Install WordPress Importer plugin
+wp plugin is-active wordpress-importer
+if [ ! $? -eq 0 ]; then
+  wp plugin install --activate wordpress-importer
+fi
+
 cd "$WD"
 
 # Apache
