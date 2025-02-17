@@ -13,5 +13,3 @@ themes/*
 .DS_Store
 [Dd]esktop.ini
 Thumbs.db
-
-docker-compose.override.yml
