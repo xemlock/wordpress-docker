@@ -30,7 +30,8 @@ services:
   db:
     image: mysql:8.4
     volumes:
-      - ./db_data:/var/lib/mysql
+      - ./db/data:/var/lib/mysql
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
